@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="email=no"/>
+    <style>
+        
+
+    </style>
+</head>    
+<body>
+    <div id="app">
+    	<span>{{msg}}</span>
+        <span v-show="true">I am v-show Show</span>
+        <span v-if="show">I am v-if Show</span>
+        <ul v-for="i in arr">
+            <li>{{i}}</li>
+        </ul>
+        <ul v-for="(item,index) of items">
+            <li>{{parentMessage}} item=>{{item}} id=>{{item.id}} index=>{{index}}  title=>{{item.title}}</li>
+        </ul>
+        <ul v-for="(value,key,index) in object">
+            <li>key=>{{key}}    value=>{{value}}  索引=>{{index}}</li>
+        </ul>
+        <!--组件-->
+        <ul>
+            <todo-item v-for="item in items" v-bind:todo="item" ></todo-item>
+        </ul>
+    </div>
+    <!--点击按钮-->
+    <div id="app1">
+        <p>{{message}}</p>
+        <button v-on:click="reverseMessage">Reverse Message</button>
+    </div>
+
+   <!--双向数据绑定-->
+   <div id="app2">
+       <input type="text" v-model="message" >
+       <p>{{message}}</p>
+   </div>
+   
+   <div id="app3">
+        <input type="text" v-on:keyup.enter="submit(msg)" v-model="msg">
+        <span>{{a}}</span>
+        <p v-for="(value,index) in arr">
+            {{value}}
+            <button v-on:click="del(index)">x</button>
+        </p>
+        <!--v-html-->
+        <p v-html="template"></p>
+        <!--过滤器-->
+        <p>{{message | filterA | filterB}}</p>
+        <!--计算属性-->
+        <p>{{message}}</p>
+   </div>
+   
+   <!--计算属性-->
+   <div id="example">
+       <p>{{message}}</p>
+   </div>
+
+   <div id="demo">
+       <h2>{{fullName}}</h2>
+   </div>
+
+    <!--class-->
+    <div id="cla">
+        <div class="static active" v-bind:class="{active:isActive,'text-danger':hasError}"></div>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    
+    //组件
+    Vue.component("todo-item",{
+        props:['todo'],
+        template:"<li>{{todo.id}}  {{todo.title}}</li>"
+    })
+
+    var data = {
+        msg:"xiaoqianqian",
+        show:true,
+        arr:[1,2,3],
+        a:"123",
+        parentMessage:'parent',
+        items:[
+            {
+                id:'1',
+                title:'zhansan'
+            },
+            {
+                id:'2',
+                title:'liside'
+            }
+        ],
+        object:{
+            FirstName:"John",
+            LastName:"Doe",
+            Age:20
+        }
+    }
+    var vm = new Vue({
+        el:"#app",
+        data:data
+        
+    })
+
+    //点击按钮
+    var app1 = new Vue({
+        el:"#app1",
+        data:{
+            message:"Hello Vue!"
+        },
+        methods:{
+            reverseMessage:function(){
+                this.message = this.message.split("").reverse().join("");
+            }
+        }
+    })
+    //双向数据绑定
+    var app2 = new Vue({
+        el:"#app2",
+        data:{
+            message:""
+        }
+    })
+
+    var app3 = new Vue({
+        el:"#app3",
+        
+        data:{
+            msg:"",
+            arr:[],
+            a:123,
+            template:"<h1>Hello</h1>",
+            message:"jamie"
+        },
+        created:function(){
+            console.log(this.a);
+        },
+        //计算属性
+        computed:{
+            mes:function(){
+                return this.message.split('').join('---');
+            }
+        },
+        methods:{
+            submit:function(str){
+                this.msg = "";
+                this.arr.push(str);
+                this.a = 321;
+                //计算属性
+                this.message = app3.mes;
+            },
+            del:function(index){
+                this.arr.splice(index,1);
+            }
+        },
+        //过滤器
+        filters:{
+            filterA:function(value){
+                if(!value) return "";
+                return value.charAt(0).toUpperCase()+value.slice(1);
+            },
+            filterB:function(value){
+                return value+=" Happy!"
+            }
+        }
+    })
+    //计算属性
+    console.log(app3.mes);
+    //监听变量
+    app3.$watch("a",function(newVal,oldVal){
+        console.log(newVal+"......"+oldVal);
+    })
+
+    var myComponent = Vue.extend({
+        data:function(){
+            return {
+                message:"I am Jamie"
+            }
+        }
+    })
+    var myComponentInstance = new myComponent();
+    console.log(myComponentInstance.message);  //I am Jamie
+
+    //计算属性
+    var example = new Vue({
+        el:"#example",
+        data:{
+            message:"Hello Word"
+        },
+        computed:{
+            reverseMessage:function(){
+                return this.message.split("").reverse().join("");
+            }
+        }
+    })
+    console.log(example.reverseMessage);
+    example.message = "Hello Jamie";
+    console.log(example.reverseMessage);
+
+
+    var demo = new Vue({
+        el:"#demo",
+        data:{
+            firstName:"John",
+            lastName:"Jamie",
+            fullName:"Amy"
+        },
+        computed: {
+            fullName: function () {
+                return this.firstName + ' ' + this.lastName
+            }
+        }
+    })
+
+    var cla = new Vue({
+        el:"#cla",
+        data:{
+            isActive: true,
+            hasError: false
+        }
+    })
+</script>  
+</html>
