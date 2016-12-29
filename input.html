@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="email=no"/>
+</head>    
+<body>
+    <div id="app">
+    	<input type="text" v-model="msg" v-on:keyup.enter="submit(msg)">
+    	<p v-for="(val,index) in arr">
+    		{{val}}
+    		<button v-on:click="del(index)">x</button>
+    	</p>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+    	el:"#app",
+    	data:{
+    		msg:"",
+    		arr:[]
+    	},
+    	methods:{
+    		submit:function(str){
+    			this.msg = "";
+    			this.arr.push(str);
+    			
+    		},
+    		del:function(index){
+    			this.arr.splice(index,1);
+    		}
+    	}
+    })
+</script>
+
+</html>
